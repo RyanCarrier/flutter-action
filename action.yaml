@@ -76,6 +76,9 @@ outputs:
   GIT_SOURCE:
     value: "${{ steps.flutter-action.outputs.GIT_SOURCE }}"
     description: Git source of Flutter SDK repository to clone
+  CACHE-EXISTS:
+    value: "${{ steps.check-cache.outputs.CACHE-EXISTS }}"
+    description: Whether the Flutter SDK cache path already exists
 
 runs:
   using: composite
@@ -115,14 +118,14 @@ runs:
       run: |
         if [ -d "${{ steps.flutter-action.outputs.CACHE-PATH }}" ]; then
           echo "Cache path already exists, skipping cache step."
-          echo "flutter-action-cache-exists=true" >> "$GITHUB_OUTPUT"
+          echo "CACHE-EXISTS=true" >> "$GITHUB_OUTPUT"
         else
-          echo "flutter-action-cache-exists=false" >> "$GITHUB_OUTPUT"
+          echo "CACHE-EXISTS=false" >> "$GITHUB_OUTPUT"
         fi
 
     - name: Cache Flutter
       uses: actions/cache@v4
-      if: ${{ inputs.cache == 'true' && steps.check-cache.outputs.flutter-action-cache-exists == 'false' }}
+      if: ${{ inputs.cache == 'true' && steps.check-cache.outputs.CACHE-EXISTS == 'false' }}
       with:
         path: ${{ steps.flutter-action.outputs.CACHE-PATH }}
         key: ${{ steps.flutter-action.outputs.CACHE-KEY }}
