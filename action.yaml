@@ -110,14 +110,15 @@ runs:
           -g '${{ inputs.git-source }}' \
           ${{ inputs.channel }}
 
-      # only run if cache path doesn't already exist
+      # only run if a valid SDK already exists at the cache path
     - name: Check if cache path exists
       id: check-cache
       if: ${{ inputs.cache == 'true' }}
       shell: bash
       run: |
-        if [ -d "${{ steps.flutter-action.outputs.CACHE-PATH }}" ]; then
-          echo "Cache path already exists, skipping cache step."
+        FLUTTER_BIN="${{ steps.flutter-action.outputs.CACHE-PATH }}/bin/flutter"
+        if [ -x "$FLUTTER_BIN" ]; then
+          echo "Valid Flutter SDK found at cache path, skipping cache step."
           echo "LOCAL-CACHE-HIT=true" >> "$GITHUB_OUTPUT"
         else
           echo "LOCAL-CACHE-HIT=false" >> "$GITHUB_OUTPUT"
