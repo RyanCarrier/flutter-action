@@ -127,7 +127,7 @@ runs:
       if: ${{ inputs.cache == 'true' }}
       shell: bash
       run: |
-        FLUTTER_BIN="${{ steps.flutter-action.outputs.CACHE-PATH }}/bin/flutter"
+        FLUTTER_BIN="${{ steps.flutter-action.outputs.CACHE-PATH }}/flutter/bin/flutter"
         if [ -x "$FLUTTER_BIN" ]; then
           echo "Valid Flutter SDK found at cache path, skipping cache step."
           echo "LOCAL-CACHE-HIT=true" >> "$GITHUB_OUTPUT"
